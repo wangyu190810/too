@@ -2,17 +2,54 @@ use std::net::{TcpListener,TcpStream};
 use std::thread;
 use std::io::prelude::*;
 use std::str;
+use std::fmt;
+use std::time::Duration;
+
+fn get_callback(){
+    
+    thread::sleep(Duration::new(5,0));
+}
+
+
+fn get(form_arges: &str, callback: fn()) -> String{
+    let arges: Vec<&str> = form_arges .split('&').collect();
+    for arge in &arges{
+        println!("{:?}",arge);
+    }
+    callback();
+    let response  = fmt::format(format_args!("{:},GET",form_arges)); 
+    return response
+}
+
+fn post(form_arges: &str) -> String{
+    let arges: Vec<&str> = form_arges.split('&').collect();
+    for arge in &arges{
+        println!("{:?}",arge);
+    }
+    let response  = fmt::format(format_args!("{:},POST",form_arges)); 
+    return response
+}
+
 
 fn header(read_data: &str) -> String{
     let mut _read_data = read_data.to_string();     
     //let client_data: Vec<&str> = read_data.split('\r');
-    let mut client_data:Vec<&str> = read_data.split("\r\n").collect();
-    println!("{:?}",client_data[0]);
-    match client_data[0].find("GET").is_some() {
-        true => "GET method".to_string(),
-        _ => "It is None GET method".to_string(),
-        
-        }
+    let mut client_data :Vec<&str> = read_data.split("\r\n").collect();
+    println!("{:?}",client_data);
+    let method : Vec<&str> = client_data[0].split(' ').collect();
+    println!("{:?}",method[0]);
+    let mut response = match method[0] {
+        "GET" => get(method[1],get_callback),
+        "POST" => post(method[1]),
+         _ => "other method".to_string()
+    };
+    return response
+
+   // match client_data[0].find("GET").is_some() {
+   //     true => "GET method".to_string(),
+   //     _ => "It is None GET method".to_string(),
+   //     
+   //     }
 //    let client_data: Vec<&str> = _read_data;
    // for row in client_data{
    //    // if assert_eq!(row.matches("GET"), "GET"){
