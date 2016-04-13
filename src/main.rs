@@ -4,6 +4,8 @@ use std::io::prelude::*;
 use std::str;
 use std::fmt;
 use std::time::Duration;
+use std::collections::HashMap;
+
 
 fn get_callback(){
     
@@ -30,34 +32,57 @@ fn post(form_arges: &str) -> String{
     return response
 }
 
+fn request(method: HashMap, arges: Vec<&str>){
+    if method.contains_key("GET"){
+        
+        return "GET Method"
+    }
+    else if method.contains_key("POST"){
+        
+        return "POST Method"
+    }
+    else{
+    
+        return "Other Method"
+    }
+
+}
+
+fn roule(url : &str,method: &str){
+
+    let mut methods = HashMap::new();
+    let method: HashMap = match method {
+        "GET" => methods.insert("GET",)
+        "POST" => post(method[1]),
+         _ => "other method".to_string()
+    };
+    request(url,)
+    
+
+}
+
+
+
+fn response(res: &str) -> String{
+    
+    
+
+    
+}
 
 fn header(read_data: &str) -> String{
     let mut _read_data = read_data.to_string();     
-    //let client_data: Vec<&str> = read_data.split('\r');
     let mut client_data :Vec<&str> = read_data.split("\r\n").collect();
     println!("{:?}",client_data);
     let method : Vec<&str> = client_data[0].split(' ').collect();
     println!("{:?}",method[0]);
-    let mut response = match method[0] {
-        "GET" => get(method[1],get_callback),
-        "POST" => post(method[1]),
-         _ => "other method".to_string()
-    };
-    return response
 
-   // match client_data[0].find("GET").is_some() {
-   //     true => "GET method".to_string(),
-   //     _ => "It is None GET method".to_string(),
-   //     
-   //     }
-//    let client_data: Vec<&str> = _read_data;
-   // for row in client_data{
-   //    // if assert_eq!(row.matches("GET"), "GET"){
-   //    //     println!("{}",&row);
-   //    // }
-   //     println!("{:?}",&row.matches("GET"));
-   //     //println!("{}",&row);
-   // }    
+    //let mut response = match method[1] {
+    //    "GET" => get(method[1],get_callback),
+    //    "POST" => post(method[1]),
+    //     _ => "other method".to_string()
+    //};
+    return response
 }
 
 
@@ -67,7 +92,6 @@ fn handler(mut stream : TcpStream){
     stream.read(&mut read_data);
     let mut response = header(str::from_utf8(&read_data).unwrap());
     stream.write(response.as_bytes());
-    //header(&read_data);
 
 }
 
