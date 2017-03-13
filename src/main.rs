@@ -5,7 +5,10 @@ use std::net::{TcpListener, TcpStream};
 
 fn rule_data(roule: &str, req: Request) -> Response{
     if let Some(req_str) = req.query{
-        let name =  req_str.get("name").unwrap();
+        let name = match req_str.get("name") {
+            Some(expr) => expr,
+            None => "",
+        };
         let content = name.to_string();
         Response::new(200, "text/html",content)
     }else{
@@ -16,7 +19,10 @@ fn rule_data(roule: &str, req: Request) -> Response{
 
 fn rule_data_app(roule: &str, req: Request) -> Response{
     if let Some(req_str) = req.query{
-        let name =  req_str.get("name").unwrap();
+       let name = match req_str.get("name") {
+            Some(expr) => expr,
+            None => "",
+        };
         let content = name.to_string();
         Response::new(200, "text/html",content)
     }else{
