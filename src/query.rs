@@ -1,7 +1,11 @@
 use std::io::prelude::*;
 use std::net::{TcpListener, TcpStream};
 use std::collections::HashMap;
+use std::path::{PathBuf,Path};
+use std::fs::File;
+use std::io::*;
 // use std::fmt::Debug::fmt;
+
 
 macro_rules! get {
     ( $expr : expr ) => {
@@ -235,7 +239,7 @@ impl Response{
         match write!(stream, "{}\r\n{}", self.head, self.body) {
             Err(e) => println!("Response error: {}", e),
             _ => {
-                drop(stream);
+                // drop(stream);
             } 
         }
     }
@@ -267,6 +271,44 @@ impl Response{
         let body = "<html><head><title>501 Not Implemented</title></head><body>501 Not Implemented</body></html>";
         Self::with_head_body(Self::header(500, "text/html", body.chars().count()), body.to_string())
     }
+
+    
+    pub fn static_response(static_path: &String ,path: &String) -> Response{
+        // 静态文件解析和返回
+        // let mut buf = PathBuf::from(static_path);
+        // buf.push(path);
+        let mut buf = Path::new(static_path).to_path_buf();
+        let p = match path.chars().count() {
+            1 => "index.html".to_string(),
+            _ => path.chars().skip(1).collect(),
+        };
+        buf.push(p);
+        match buf.as_path().to_str(){
+            
+            Some(path) => {
+                println!("path is {},",path);
+                match File::open(path){
+                    Ok(mut file ) =>{
+                        let mut body = String::new();
+                        file.read_to_string(&mut body).unwrap();
+                        Response::new(200, "text/html",body)
+                    
+                    },
+                    Err(mut err) => {
+                        println!("path is {},{:?}",path,err);
+                        Response::html_404_body()
+                    }
+                
+                    
+                }
+            },
+            None =>{
+                Response::html_404_body()
+            }
+        }
+    }
+
+
 }
 
 // 
@@ -291,7 +333,7 @@ fn process(req: Request){
 pub struct Server{
     host:String,
     port:usize,
-    static_path:String
+    pub static_path:String
 }
 
 impl Server{
@@ -314,7 +356,7 @@ impl Server{
         for stream in listener.incoming() {
             match stream {
                 Ok(stream) => {
-                    Self::handle_client(stream);
+                    Self::handle_client(self, stream);
                 
                 }
                 Err(e) => { 

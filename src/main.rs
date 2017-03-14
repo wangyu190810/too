@@ -12,7 +12,6 @@ fn rule_data(roule: &str, req: Request) -> Response{
         let content = name.to_string();
         Response::new(200, "text/html",content)
     }else{
-
         Response::html_404_body()
     }    
 }
@@ -33,12 +32,16 @@ fn rule_data_app(roule: &str, req: Request) -> Response{
 
 impl Server {
 
-    pub fn handle_client(mut stream: TcpStream) {
+    pub fn handle_client(self, mut stream: TcpStream) {
     // pares(&mut stream);
     // let mut rule_url = Vec::new(u8);
         // let resp: Response;
         if let Some(req) = Request::pares(&mut stream){
-            if req.path == "/"{
+            if req.path.ends_with(".html"){
+                Response::static_response(&self.static_path.to_string(), &req.path).send(&mut stream)
+                // Response::html_body(req.path.as_str()).send(&mut stream)
+            }
+            else if req.path == "/"{
                 let resp =rule_data("/", req);
                 resp.send(&mut stream);
             }else if req.path == "/index"{
