@@ -32,13 +32,13 @@ fn rule_data_app(roule: &str, req: Request) -> Response{
 
 impl Server {
 
-    pub fn handle_client(self, mut stream: TcpStream) {
+    pub fn handle_client(static_path: &String, mut stream: TcpStream) {
     // pares(&mut stream);
     // let mut rule_url = Vec::new(u8);
         // let resp: Response;
         if let Some(req) = Request::pares(&mut stream){
             if req.path.ends_with(".html"){
-                Response::static_response(&self.static_path.to_string(), &req.path).send(&mut stream)
+                Response::static_response(static_path, &req.path).send(&mut stream)
                 // Response::html_body(req.path.as_str()).send(&mut stream)
             }
             else if req.path == "/"{
@@ -63,6 +63,6 @@ impl Server {
 }
 
 fn main(){
-    let  server = Server::new("0.0.0.0",5000,".");
+    let  server = Server::new("0.0.0.0",5000,"./static");
     server.start();
 }

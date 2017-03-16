@@ -122,6 +122,7 @@ impl Request {
         }
 
     }
+
     fn parse_get_resource(resource: &str) ->(String, Option<HashMap<String, String>>){
         let parts: Vec<_> = resource.splitn(2, '?').collect();
         if parts.len() == 1 || parts[1].trim().chars().count() == 0 {
@@ -356,7 +357,7 @@ impl Server{
         for stream in listener.incoming() {
             match stream {
                 Ok(stream) => {
-                    Self::handle_client(self, stream);
+                    Self::handle_client(&self.static_path, stream);
                 
                 }
                 Err(e) => { 
