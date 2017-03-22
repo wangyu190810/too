@@ -62,7 +62,14 @@ impl Server {
     }
 }
 
-fn main(){
-    let  server = Server::new("0.0.0.0",5000,"./static");
-    server.start();
+// fn main(){
+//     let  server = Server::new("0.0.0.0",5000,"./static");
+//     server.start();
+// }
+extern crate server;
+
+use server::net;
+
+fn main() {
+    net::run();
 }

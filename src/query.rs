@@ -198,7 +198,23 @@ impl Request {
         let value = get!(it.next());
         Some((header.to_string(), value.to_string()))
 
-    }   
+    }
+    // #[test]
+    // fn test_parse_post_query(){
+    //     let request_str = "username=test&password=test";
+    //     if let Some(data)  =  Self::parse_post_resource(&request_str).match{
+    //         data.unwrap() => {
+    //             assert!(data,"test")
+    //             },
+    //         _ => "",
+            
+    //     }
+           
+        
+     
+        
+    // }
+      
 }
 
 //  fn pares(stream: &mut TcpStream) -> Option<Request>{
@@ -374,4 +390,32 @@ impl Server{
 
   
 }
+
+// #[cfg(test)]
+// mod tests {
+//     #[test]
+//   use std::collections::HashMap;
+
+//     // fn test_parse_post_resource(){
+//     //     let () Request::parse_post_resource(&request_str);
+
+//     // }
+//     fn test_parse_post_query(){
+//         let request_str = "username=test&password=test";
+//         let data:HashMap<String, String> =  Request::parse_post_resource(&request_str);
+//         assert!( data.get("username"),"test")
+//     }
+   
+//     // fn parse_post_resource(resource: &str) ->(String, Option<HashMap<String, String>>){
+//     //     let parts: Vec<_> = resource.splitn(2, '?').collect();
+//     //     // if parts.len() == 1 || parts[1].trim().chars().count() == 0 {
+//     //     //     (parts[0].to_string(), None)
+//     //     // }else {
+//     //         (parts[0].to_string(), Self::parse_post_query(resource))
+//     //     // }
+//     // }
+//     fn it_works() {
+//     }
+// }
+
 
