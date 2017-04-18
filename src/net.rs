@@ -1,7 +1,8 @@
-
-
+use std::net::{TcpListener, TcpStream};
+use std::collections::HashMap;
 use std::io;
 use std::str;
+
 use bytes::{BytesMut, BufMut};
 use tokio_io::codec::{Encoder, Decoder};
 use tokio_proto::pipeline::ServerProto;
@@ -10,22 +11,35 @@ use tokio_io::codec::Framed;
 use tokio_service::Service;
 use tokio_proto::TcpServer;
 use futures::{future, Future, BoxFuture};
-
+use query::Request;
 
 pub struct LineCodec;
 
+// pub struct LineCodec{
+ 
+//     pub method: String,
+//     pub path: String,
+//     pub version: String,
+//     pub headers: HashMap<String, String>,
+//     pub query: Option<HashMap<String, String>>,
+
+// }
+
 impl Decoder for LineCodec {
-    type Item = String;
+    type Item =  String;
     type Error = io::Error;
 
     fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<String>> {
+        println!("{:?}", &buf);
+        // let request =  Self::pares(buf.to_vec());
+        
         if let Some(i) = buf.iter().position(|&b| b == b'\n') {
             // remove the serialized frame from the buffer.
             let line = buf.split_to(i);
 
             // Also remove the '\n'
             buf.split_to(1);
-
+          
             // Turn this data into a UTF string and return it in a Frame.
             match str::from_utf8(&line) {
                 Ok(s) => Ok(Some(s.to_string())),
@@ -88,6 +102,7 @@ impl Service for Echo {
     fn call(&self, req: Self::Request) -> Self::Future {
         // In this case, the response is immediate.
         future::ok(req).boxed()
+        // drop(req);
     }
 }
 
