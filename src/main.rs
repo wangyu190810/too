@@ -11,13 +11,14 @@ extern crate server;
 use server::net;
 use server::tokionet;
 use server::queue::{queueData, thread_test};
+use server::tokiotest;
 
 fn main() {
     // net::run();
     // tokionet::run();
   //   use queue::queueData;
-      thread_test();
-        
-        
+    //   thread_test();
+    // tokiotest::futures_test::futher_run();
+    tokiotest::futures_postgres::http_postgres_run();
 
 }

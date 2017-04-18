@@ -4,10 +4,19 @@ extern crate futures;
 extern crate tokio_io;
 extern crate tokio_proto;
 extern crate tokio_service;
+extern crate futures_cpupool;
+extern crate tokio_timer;
+extern crate r2d2;
+extern crate r2d2_postgres;
+extern crate rand;
+extern crate rustc_serialize;
+extern crate tokio_minihttp;
+
 pub mod net;
 pub mod query;
 pub mod tokionet;
 pub mod queue;
+pub mod tokiotest;
 
 #[cfg(test)]
 mod tests {
